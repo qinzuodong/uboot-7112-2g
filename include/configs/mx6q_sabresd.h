@@ -24,6 +24,10 @@
 
 #include <asm/arch/mx6.h>
 
+/* Add by qinzd 2016-07-26 */
+#define CONFIG_VIDEO_LOGO
+#define CONFIG_VIDEO_BMP_LOGO
+
  /* High Level Configuration Options */
 #define CONFIG_ARMV7	/* This is armv7 Cortex-A9 CPU core */
 #define CONFIG_MXC
@@ -129,9 +133,9 @@
 		"bootargs_mmc=setenv bootargs ${bootargs} ip=dhcp "     \
 			"root=/dev/mmcblk0p1 rootwait\0"                \
 		"bootcmd_mmc=run bootargs_base bootargs_mmc; "   \
-		"mmc dev 3; "	\
+		"mmc dev 2; "	\
 		"mmc read ${loadaddr} 0x800 0x2000; bootm\0"	\
-		"bootcmd=run bootcmd_net\0"                             \
+		"bootcmd=run bootcmd_mmc\0"                             \
 
 
 #define CONFIG_ARP_TIMEOUT	200UL
@@ -144,8 +148,8 @@
 #define CONFIG_AUTO_COMPLETE
 #define CONFIG_SYS_CBSIZE		1024	/* Console I/O Buffer Size */
 /* Print Buffer Size */
-#define CONFIG_SYS_PBSIZE (CONFIG_SYS_CBSIZE + sizeof(CONFIG_SYS_PROMPT) + 16)
-#define CONFIG_SYS_MAXARGS	16	/* max number of command args */
+#define CONFIG_SYS_PBSIZE (CONFIG_SYS_CBSIZE + sizeof(CONFIG_SYS_PROMPT) + 128)
+#define CONFIG_SYS_MAXARGS	128	/* max number of command args */
 #define CONFIG_SYS_BARGSIZE CONFIG_SYS_CBSIZE /* Boot Argument Buffer Size */
 
 #define CONFIG_SYS_MEMTEST_START	0x10000000	/* memtest works on */
@@ -159,6 +163,12 @@
 
 #define CONFIG_CMDLINE_EDITING
 
+#define CONFIG_SYS_HUSH_PARSER		1 /* Use the HUSH parser */
+#ifdef	CONFIG_SYS_HUSH_PARSER
+#define	CONFIG_SYS_PROMPT_HUSH_PS2	"> "
+#endif
+
+#define CONFIG_ENET_RMII
 #define CONFIG_FEC0_IOBASE	ENET_BASE_ADDR
 #define CONFIG_FEC0_PINMUX	-1
 #define CONFIG_FEC0_MIIBASE	-1
@@ -171,8 +181,8 @@
 #define CONFIG_CMD_MII
 #define CONFIG_CMD_DHCP
 #define CONFIG_CMD_PING
-#define CONFIG_IPADDR			192.168.1.103
-#define CONFIG_SERVERIP			192.168.1.101
+#define CONFIG_IPADDR			192.168.2.103
+#define CONFIG_SERVERIP			192.168.2.101
 #define CONFIG_NETMASK			255.255.255.0
 
 /*
@@ -201,8 +211,8 @@
  */
 #ifdef CONFIG_CMD_SF
 	#define CONFIG_FSL_SF		1
-	#define CONFIG_SPI_FLASH_IMX_M25PXX	1
-	#define CONFIG_SPI_FLASH_CS	0
+	#define CONFIG_SPI_FLASH_IMX_SST	1
+	#define CONFIG_SPI_FLASH_CS	1
 	#define CONFIG_IMX_ECSPI
 	#define IMX_CSPI_VER_2_3	1
 	#define MAX_SPI_BYTES		(64 * 4)
@@ -222,7 +232,7 @@
 	#define CONFIG_MMC
 	#define CONFIG_GENERIC_MMC
 	#define CONFIG_IMX_MMC
-	#define CONFIG_SYS_FSL_USDHC_NUM        4
+	#define CONFIG_SYS_FSL_USDHC_NUM        3
 	#define CONFIG_SYS_FSL_ESDHC_ADDR       0
 	#define CONFIG_SYS_MMC_ENV_DEV  2
 	#define CONFIG_DOS_PARTITION	1
@@ -299,7 +309,8 @@
 #define CONFIG_SYS_NO_FLASH
 
 /* Monitor at beginning of flash */
-#define CONFIG_FSL_ENV_IN_MMC
+#define CONFIG_FSL_ENV_IN_SF
+//#define CONFIG_FSL_ENV_IN_MMC
 /* #define CONFIG_FSL_ENV_IN_NAND */
 /* #define CONFIG_FSL_ENV_IN_SATA */
 
@@ -338,7 +349,11 @@
 	#define CONFIG_SYS_CONSOLE_IS_IN_ENV
 	#define LCD_BPP		LCD_COLOR16
 	#define CONFIG_CMD_BMP
-	#define CONFIG_BMP_8BPP
+
+	/* Modify by qinzd 2016-07-26 */
+//	#define CONFIG_BMP_8BPP
+	#define CONFIG_BMP_24BPP
+
 	#define CONFIG_FB_BASE	(TEXT_BASE + 0x300000)
 	#define CONFIG_SPLASH_SCREEN_ALIGN
 	#define CONFIG_SYS_WHITE_ON_BLACK

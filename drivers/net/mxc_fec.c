@@ -897,7 +897,10 @@ int fec_init(struct eth_device *dev, bd_t *bd)
 	if (info->phy_addr < 0 || info->phy_addr > 0x1F)
 		info->phy_addr = mxc_fec_mii_discover_phy(dev);
 #endif
-#if defined(CONFIG_MX6Q) || defined(CONFIG_MX6DL)
+//#if defined(CONFIG_MX6Q) || defined(CONFIG_MX6DL)
+printf("%s: info->phy_addr=0x%x\n", __func__, info->phy_addr);
+#if (defined(CONFIG_MX6Q) || defined(CONFIG_MX6DL)) && \
+		!defined(CONFIG_ENET_RMII)
 	mx6_rgmii_rework(dev->name, info->phy_addr);
 #endif
 	mxc_get_phy_ouid(dev->name, info->phy_addr);
@@ -932,8 +935,17 @@ int fec_init(struct eth_device *dev, bd_t *bd)
 	fecp->emrbr = PKT_MAXBLR_SIZE;
 
 #if defined(CONFIG_MX6Q) || defined(CONFIG_MX6DL)
-	fecp->rcr &= ~(0x100);
-	fecp->rcr |= 0x44;
+//	fecp->rcr &= ~(0x100);
+//	fecp->rcr |= 0x44;
+#define ENET_RMII_MODE	(FEC_RCR_RMII_MODE | FEC_RCR_MII_MODE)
+#define ENET_RGMII_MODE	(FEC_RCR_RGMII_ENA | FEC_RCR_MII_MODE)
+#ifdef CONFIG_ENET_RMII
+	fecp->rcr |= ENET_RMII_MODE;
+#else
+	fecp->rcr &= ~FEC_RCR_RMII_MODE;
+	fecp->rcr |= ENET_RGMII_MODE;
+#endif
+
 #endif
 	/*
 	 * Setup Buffers and Buffer Desriptors

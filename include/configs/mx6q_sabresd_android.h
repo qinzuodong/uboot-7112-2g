@@ -55,7 +55,7 @@
 
 #define CONFIG_ANDROID_RECOVERY_BOOTARGS_MMC NULL
 #define CONFIG_ANDROID_RECOVERY_BOOTCMD_MMC  \
-	"booti mmc3 recovery"
+	"booti mmc2 recovery"
 #define CONFIG_ANDROID_RECOVERY_CMD_FILE "/recovery/command"
 #define CONFIG_INITRD_TAG
 
@@ -68,12 +68,14 @@
 
 #define CONFIG_INITRD_TAG
 
+/* Add by qinzd 2016-07-26 */
 #define	CONFIG_EXTRA_ENV_SETTINGS					\
 		"netdev=eth0\0"						\
 		"ethprime=FEC0\0"					\
-		"fastboot_dev=mmc3\0"					\
-		"bootcmd=booti mmc3\0"					\
+		"fastboot_dev=mmc2\0"					\
+		"bootcmd=booti mmc2\0"					\
 		"splashimage=0x30000000\0"				\
 		"splashpos=m,m\0"					\
+		"bootargs=console=ttymxc0,115200 init=/init video=mxcfb0:dev=ldb,bpp=32 video=mxcfb1:off video=mxcfb2:off fbmem=40M fb0base=0x27b00000 vmalloc=400M androidboot.console=ttymxc0 androidboot.hardware=freescale\0" \
 		"lvds_num=1\0"
 #endif
